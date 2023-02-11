@@ -30,7 +30,7 @@ jobs:
       uses: stefanzweifel/git-auto-commit-action@v4
       with:
         commit_message: "Bump patch version to $new_version"
-        branch: main
+        branch: master
         add: pom.xml
         push: true
         token: ${{ secrets.GITHUB_TOKEN }} 
