@@ -31,7 +31,7 @@ jobs:
 
     - name: Docker build
       run: |
-        docker build . -t omeili/java-app:${{ steps.bump.outputs.jar_version }} -f DockerfileMultiStage
+        docker build . -t omeili/java-app:${{ steps.bump.outputs.jar_version }} -f DockerMultiStage
     - name: Login to DockerHub
       uses: docker/login-action@v1
       with:
