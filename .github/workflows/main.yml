@@ -2,6 +2,9 @@ name: Maven Package - Multi stage docker
 
 on:
   [push]
+  
+env:
+  VERSION: 1.0.0
 
 permissions:
   contents: write
@@ -21,29 +24,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Bump jar version
-      id: bump
-      run: |
-        POMPATH=myapp
-        version=$(cd $POMPATH && mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-        major=$(echo $version | cut -d. -f1)
-        minor=$(echo $version | cut -d. -f2)
-        patch=$(echo $version | cut -d. -f3)
-        new_version="$major.$minor.$((patch + 1))"
-        mvn -f myapp/pom.xml versions:set -DnewVersion=$new_version
-        echo ::set-output name=jar_version::${new_version}
 
-    - name: Commit files
-      run: |
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
-        git commit -a --no-verify -m "Add changes"
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GIT_PUSHHH }}
-        branch: master
-        
+ 
     - name: Docker build
       run: |
         docker build . -t omeili/java-app:${{ steps.bump.outputs.jar_version }} -f DockerMultiStage
@@ -52,7 +34,25 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
+    
+    - name: Extract latest tag
+      id: extract_tag
+      run: |
+        # Get the latest tag of an image from Docker Hub
+        env.VERSION=$(curl -s "https://registry.hub.docker.com/v2/repositories/omeili/java-app/tags/?page_size=1&order=desc" | jq -r '.results[].name')
+        echo "Latest tag: ${{ env.VERSION }}"
+        echo "::set-output name=tag::${{ env.VERSION }}"
+        
+    - name: Bump jar version
+      id: bump
+      run: |
+        major=$(echo $env.VERSION | cut -d. -f1)
+        minor=$(echo $env.VERSION | cut -d. -f2)
+        patch=$(echo $env.VERSION | cut -d. -f3)
+        new_version="$major.$minor.$((patch + 1))"
+        mvn -f myapp/pom.xml versions:set -DnewVersion=$new_version
+        echo ::set-output name=jar_version::${new_version}
+        
     - name: Docker push
       run: |
         docker push omeili/java-app:${{ steps.bump.outputs.jar_version }}
