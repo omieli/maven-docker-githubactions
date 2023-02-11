@@ -26,14 +26,20 @@ jobs:
         new_version="$major.$minor.$((patch + 1))"
         mvn -f myapp/pom.xml versions:set -DnewVersion=$new_version
         echo ::set-output name=jar_version::${new_version}
+    - name: Set up Git user
+      run: |
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "GitHub Actions"
+
     - name: Commit and push changes
-      uses: stefanzweifel/git-auto-commit-action@v4
+      uses: actions/git-client@v2
       with:
-        commit_message: "Bump patch version to $new_version"
-        branch: master
-        add: pom.xml
-        push: true
-        token: ${{ secrets.GITHUB_TOKEN }} 
+        args: |
+          add myapp/pom.xml
+          commit -m "Bump patch version to $new_version"
+          push origin master
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Docker build
       run: |
         docker build . -t omeili/java-app:${{ steps.bump.outputs.jar_version }} -f DockerMultiStage
