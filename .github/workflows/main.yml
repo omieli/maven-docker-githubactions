@@ -26,7 +26,14 @@ jobs:
         new_version="$major.$minor.$((patch + 1))"
         mvn -f myapp/pom.xml versions:set -DnewVersion=$new_version
         echo ::set-output name=jar_version::${new_version}
-
+    - name: Commit and push changes
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "Bump patch version to $new_version"
+        branch: main
+        add: pom.xml
+        push: true
+        token: ${{ secrets.GITHUB_TOKEN }} 
     - name: Docker build
       run: |
         docker build . -t omeili/java-app:${{ steps.bump.outputs.jar_version }} -f DockerMultiStage
