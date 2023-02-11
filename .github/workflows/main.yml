@@ -25,18 +25,20 @@ jobs:
       id: bump
       run: |
         POMPATH=myapp
-        version=${{  env.JAR_VERSION  }}
+        version=${{  var.JAR_VERSION  }}
         major=$(echo $version | cut -d. -f1)
         minor=$(echo $version | cut -d. -f2)
         patch=$(echo $version | cut -d. -f3)
         new_version="$major.$minor.$((patch + 1))"
-        echo $new_version
+        echo ${new_version}
 
-    - name: Update repository secret
-      uses: actions/set-secret@v1
+    - name: Update MY_SECRET
+      uses: actions/create-or-update-secret@v1
       with:
         name: JAR_VERSION
-        value: updated_value
+        value: ${new_version}
+        repository-id: ${{ env.GITHUB_REPOSITORY_ID }}
+        api-key: ${{ secrets.GITHUB_TOKEN }}
         
     - name: Docker build
       run: |
