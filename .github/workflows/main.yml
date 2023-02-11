@@ -25,20 +25,24 @@ jobs:
       id: bump
       run: |
         POMPATH=myapp
-        version=${{  vars.JAR_VERSION  }}
+        version=$(cd $POMPATH && mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
         major=$(echo $version | cut -d. -f1)
         minor=$(echo $version | cut -d. -f2)
         patch=$(echo $version | cut -d. -f3)
         new_version="$major.$minor.$((patch + 1))"
-        echo ${new_version}
+        mvn -f myapp/pom.xml versions:set -DnewVersion=$new_version
+        echo ::set-output name=jar_version::${new_version}
 
-    - name: Update MY_SECRET
-      uses: actions/create-or-update-secret@v1
+    - name: Commit files
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git commit -a -m "Add changes"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
       with:
-        name: JAR_VERSION
-        value: ${new_version}
-        repository-id: ${{ env.GITHUB_REPOSITORY_ID }}
-        api-key: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.GIT_PUSHHH }}
+        branch: master
         
     - name: Docker build
       run: |
