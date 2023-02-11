@@ -2,8 +2,7 @@ name: Maven Package - Multi stage docker
 
 on:
   [push]
-env:
-  GIT_SSH_COMMAND: ssh -i ${{ secrets.GIT_PUSH }}
+
   
 jobs:
   build:
@@ -29,25 +28,18 @@ jobs:
         mvn -f myapp/pom.xml versions:set -DnewVersion=$new_version
         echo ::set-output name=jar_version::${new_version}
 
-    - name: Create SSH key and copy to runner
-      run: |
-        ssh-keygen -t rsa -b 4096 -C "${{ runners.os }}"
-        xclip -sel clip < ~/.ssh/id_rsa.pub
-        
-        
-    - name: Set up Git user
+
+    - name: Commit
       run: |
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git config --global user.name "GitHub Actions"
-
-    - name: Commit and push changes
-      run: |
-        git remote set-url origin git@github.com:omieli/maven-hello-world.git
         git add myapp/pom.xml
         git commit -m "Bump patch version to $new_version"
-        git push origin master
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: master
     - name: Docker build
       run: |
         docker build . -t omeili/java-app:${{ steps.bump.outputs.jar_version }} -f DockerMultiStage
