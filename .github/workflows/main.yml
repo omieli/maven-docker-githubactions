@@ -42,6 +42,7 @@ jobs:
         minor=$(echo $new_version | cut -d. -f2)
         patch=$(echo $new_version | cut -d. -f3)
         new_version="$major.$minor.$((patch + 1))"
+        echo " ${new_version}"
         mvn -f myapp/pom.xml versions:set -DnewVersion=$new_version
         echo ::set-output name=jar_version::${new_version}
         
