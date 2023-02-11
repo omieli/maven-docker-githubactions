@@ -31,8 +31,8 @@ jobs:
 
     - name: Commit
       run: |
-        git config --global user.email "mieli.ohad@gmail.com"
-        git config --global user.name "GitHub Actions"
+        sudo git config --global user.email "mieli.ohad@gmail.com"
+        sudo git config --global user.name "omieli"
         git add myapp/pom.xml
         git commit -m "Bump patch version to $new_version"
     - name: Push changes
