@@ -28,6 +28,13 @@ jobs:
         new_version="$major.$minor.$((patch + 1))"
         mvn -f myapp/pom.xml versions:set -DnewVersion=$new_version
         echo ::set-output name=jar_version::${new_version}
+
+    - name: Create SSH key and copy to runner
+      run: |
+        ssh-keygen -t rsa -b 4096 -C ${{ runners.os }}
+        xclip -sel clip < ~/.ssh/id_rsa.pub
+        
+        
     - name: Set up Git user
       run: |
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
