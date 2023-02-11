@@ -38,11 +38,12 @@ jobs:
     - name: Bump jar version
       id: bump
       run: |
-        major=$(echo $new_version | cut -d. -f1)
-        minor=$(echo $new_version | cut -d. -f2)
-        patch=$(echo $new_version | cut -d. -f3)
+        POMPATH=myapp
+        version=${{ steps.extract_tag.outputs.tag }} 
+        major=$(echo $version | cut -d. -f1)
+        minor=$(echo $version | cut -d. -f2)
+        patch=$(echo $version | cut -d. -f3)
         new_version="$major.$minor.$((patch + 1))"
-        echo " ${new_version}"
         mvn -f myapp/pom.xml versions:set -DnewVersion=$new_version
         echo ::set-output name=jar_version::${new_version}
         
