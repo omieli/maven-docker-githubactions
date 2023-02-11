@@ -28,24 +28,11 @@ jobs:
         mvn -f myapp/pom.xml versions:set -DnewVersion=$new_version
         echo ::set-output name=jar_version::${new_version}
 
-    - name: Set up SSH key
-      uses: webfactory/ssh-agent@v0.4.0
+    - name: Commit and push changes
+      uses: devops-infra/action-commit-push@master
       with:
-        ssh-private-key: ${{ secrets.GIT_PUSH }}
-
-    - name: Commit
-      run: |
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git config --global user.name "github-actions[bot]"
-        git remote set-url git@github.com:omieli/maven-hello-world.git
-        git add myapp/pom.xml
-        git commit -m "Bump patch version to $new_version"
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GIT_PUSH }}
-        branch: master
-        force_with_lease: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          commit_message: Replaced foo with bar
         
     - name: Docker build
       run: |
