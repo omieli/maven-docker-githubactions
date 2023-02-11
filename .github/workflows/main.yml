@@ -18,6 +18,7 @@ jobs:
     - name: Bump jar version
       id: bump
       run: |
+        mvn -f myapp/pom.xml  clean install
         version=$(mvn -f myapp/pom.xml help:evaluate -Dexpression=project.version | grep -v '\[')
         major=$(echo $version | cut -d. -f1)
         minor=$(echo $version | cut -d. -f2)
