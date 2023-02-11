@@ -24,11 +24,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-
- 
-    - name: Docker build
-      run: |
-        docker build . -t omeili/java-app:${{ steps.bump.outputs.jar_version }} -f DockerMultiStage
     - name: Login to DockerHub
       uses: docker/login-action@v1
       with:
@@ -53,6 +48,9 @@ jobs:
         mvn -f myapp/pom.xml versions:set -DnewVersion=$new_version
         echo ::set-output name=jar_version::${new_version}
         
+    - name: Docker build
+      run: |
+        docker build . -t omeili/java-app:${{ steps.bump.outputs.jar_version }} -f DockerMultiStage
     - name: Docker push
       run: |
         docker push omeili/java-app:${{ steps.bump.outputs.jar_version }}
