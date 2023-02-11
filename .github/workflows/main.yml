@@ -3,12 +3,6 @@ name: Maven Package - Multi stage docker
 on:
   [push]
   
-permissions:
-  contents: write
-  pull-requests: write
-  issues: write
-  repository-projects: write
-  
 jobs:
   build:
     runs-on: ubuntu-latest
