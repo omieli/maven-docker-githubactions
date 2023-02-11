@@ -18,7 +18,8 @@ jobs:
     - name: Bump jar version
       id: bump
       run: |
-        version=$(mvn help:evaluate -Dexpression=project.version | grep -v '\[')
+        POMPATH=my-app
+        version=$(cd $POMPATH && mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
         major=$(echo $version | cut -d. -f1)
         minor=$(echo $version | cut -d. -f2)
         patch=$(echo $version | cut -d. -f3)
