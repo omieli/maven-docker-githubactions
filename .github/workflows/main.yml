@@ -3,9 +3,6 @@ name: Maven Package - Multi stage docker
 on:
   [push]
   
-env:
-  VERSION: 1.0.0
-
 permissions:
   contents: write
   pull-requests: write
@@ -34,16 +31,16 @@ jobs:
       id: extract_tag
       run: |
         # Get the latest tag of an image from Docker Hub
-        env.VERSION=$(curl -s "https://registry.hub.docker.com/v2/repositories/omeili/java-app/tags/?page_size=1&order=desc" | jq -r '.results[].name')
-        echo "Latest tag: ${{ env.VERSION }}"
-        echo "::set-output name=tag::${{ env.VERSION }}"
+        new_version=$(curl -s "https://registry.hub.docker.com/v2/repositories/omeili/java-app/tags/?page_size=1&order=desc" | jq -r '.results[].name')
+        echo "Latest tag: ${new_version}"
+        echo "::set-output name=tag::${new_version}"
         
     - name: Bump jar version
       id: bump
       run: |
-        major=$(echo $env.VERSION | cut -d. -f1)
-        minor=$(echo $env.VERSION | cut -d. -f2)
-        patch=$(echo $env.VERSION | cut -d. -f3)
+        major=$(echo $new_version | cut -d. -f1)
+        minor=$(echo $new_version | cut -d. -f2)
+        patch=$(echo $new_version | cut -d. -f3)
         new_version="$major.$minor.$((patch + 1))"
         mvn -f myapp/pom.xml versions:set -DnewVersion=$new_version
         echo ::set-output name=jar_version::${new_version}
