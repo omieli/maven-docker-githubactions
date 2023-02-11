@@ -31,7 +31,7 @@ jobs:
 
     - name: Create SSH key and copy to runner
       run: |
-        ssh-keygen -t rsa -b 4096 -C ${{ runners.os }}
+        ssh-keygen -t rsa -b 4096 -C "${{ runners.os }}"
         xclip -sel clip < ~/.ssh/id_rsa.pub
         
         
