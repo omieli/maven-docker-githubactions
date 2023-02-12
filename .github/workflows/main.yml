@@ -27,7 +27,7 @@ jobs:
         # Get the latest tag of an image from Docker Hub
         new_version=$(curl -s "https://registry.hub.docker.com/v2/repositories/omeili/java-app/tags/?page_size=1&order=desc" | jq -r '.results[].name')
         echo "Latest tag: ${new_version}"
-        echo "::set-output name=tag::${new_version}"
+        echo "name=tag::${new_version}" 
         
     - name: Bump jar version
       id: bump
