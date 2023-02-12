@@ -39,7 +39,6 @@ jobs:
         patch=$(echo $version | cut -d. -f3)
         new_version="$major.$minor.$((patch + 1))"
         mvn -f myapp/pom.xml versions:set -DnewVersion=$new_version
-        echo "name=jar_version::${new_version}" >> $GITHUB_OUTPUT
         
     - name: Docker build
       run: |
