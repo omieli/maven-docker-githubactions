@@ -8,7 +8,7 @@ WORKDIR root/
 COPY . .
 
 #Running Maven command to build the application with the specified pom.xml file. The "-B" option runs Maven in batch mode, "-e" option shows the stack trace in case of errors, and "-X" option enables the debugging output
-RUN mvn -B package -e -X --file myapp/pom.xml
+RUN mvn -B package -e -X --file ./myapp/pom.xml
 
 #Base image used in this stage is "openjdk:8-jre" which is a standard OpenJDK Java runtime image available on Docker Hub
 FROM openjdk:8-jre
@@ -19,8 +19,8 @@ RUN useradd -ms /bin/bash tempuser
 WORKDIR /home/tempuser
 
 #Copying the built application jar from the previous stage using the "--from" option
-COPY --from=BUILD_IMAGE /root/dev/myapp/target/*.jar .
+COPY --from=BUILD_IMAGE root/myapp/target/*.jar .
 
 USER tempuser
 #Setting the default command to run the application jar
-CMD java -jar myapp*.jar
+CMD java -jar *.jar
