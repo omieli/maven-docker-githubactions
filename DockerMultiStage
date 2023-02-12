@@ -13,14 +13,17 @@ RUN mvn -B package -e -X --file ./myapp/pom.xml
 #Base image used in this stage is "openjdk:8-jre" which is a standard OpenJDK Java runtime image available on Docker Hub
 FROM openjdk:8-jre
 
+#Create a new user named "tempuser" on a Unix-based system.
 RUN useradd -ms /bin/bash tempuser
 
-#Setting the working directory to "/root/"
+#Setting the working directory
 WORKDIR /home/tempuser
 
 #Copying the built application jar from the previous stage using the "--from" option
 COPY --from=BUILD_IMAGE root/myapp/target/*.jar .
 
+#Sets the current user to "tempuser" for the rest of the Dockerfile commands
 USER tempuser
+
 #Setting the default command to run the application jar
 CMD java -jar *.jar
