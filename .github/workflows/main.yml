@@ -3,7 +3,6 @@ name: Maven Package - Multi stage docker
 on:
   [push]
   
-  
 jobs:
   build:
     runs-on: ubuntu-latest
