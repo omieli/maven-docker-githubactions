@@ -9,7 +9,7 @@ on:
 env:
   REPO: omeili/java-app
 jobs:
-  build:
+  set:
     runs-on: ubuntu-latest
   
     outputs:
