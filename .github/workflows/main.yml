@@ -28,8 +28,8 @@ jobs:
     - name: Login to DockerHub
       uses: docker/login-action@v1
       with:
-        username: env.USERNAME
-        password: env.PASSWORD
+        username: ${env.USERNAME}
+        password: ${env.PASSWORD}
 
 #The 'Extract latest tag' step uses curl to retrieve the latest tag of the 'omeili/java-app' image from Docker Hub.    
     - name: Extract latest tag
