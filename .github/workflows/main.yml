@@ -63,4 +63,4 @@ jobs:
     steps:
     - name: Run container
       run: |
-        docker run ${{  env.REPO  }}:${{  needs.build.outputs.jar_version  }}
+        docker run ${{  env.REPO  }}:${{  needs.set.outputs.jar_version  }}
