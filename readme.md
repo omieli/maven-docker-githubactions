@@ -23,7 +23,6 @@ The Github Actions pipeline defined in this repository performs the following ac
 
 - Extract latest image tag from Docker Hub
 - Increase the Patch part of the jar version (e.g. 1.0.0 -> 1.0.1) automatically.
-- Build a Docker image from the current directory using the Dockerfile with the name "DockerMultiStage".
 - Create a Docker image using the command build, the "DockerMultiStage" file and the command mvn package inside it.
 - Push the docker image that was created in the previous step to Docker Hub.
 - Download and run the docker image.
