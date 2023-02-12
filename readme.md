@@ -34,7 +34,7 @@ The Github Actions pipeline defined in this repository performs the following ac
     User name: DOCKERHUB_USERNAME
     Password: DOCKERHUB_PASSWORD
 - Go to "Actions" on repository and turn on workflow by clicking the green button as shows in image:
-![Screenshot](workflowimg.png)
+![Screenshot](images/workflowimg.png)
 
 - At line in workflow file (main.yml), change the environmente variable "REPO" value to your/desired repository.
 
