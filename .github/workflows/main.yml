@@ -6,7 +6,8 @@ name: Maven Package - Multi stage docker
 
 on:
   [push]
-  
+env:
+  REPO: omeili/java-app
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,12 +26,12 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-#The 'Extract latest tag' step uses curl to retrieve the latest tag of the 'omeili/java-app' image from Docker Hub.    
+#The 'Extract latest tag' step uses curl to retrieve the latest tag of the repo image from Docker Hub.    
     - name: Extract latest tag
       id: extract_tag
       run: |
         # Get the latest tag of an image from Docker Hub
-        new_version=$(curl -s "https://registry.hub.docker.com/v2/repositories/omeili/java-app/tags/?page_size=1&order=desc" | jq -r '.results[].name')
+        new_version=$(curl -s "https://registry.hub.docker.com/v2/repositories/$env.REPO/tags/?page_size=1&order=desc" | jq -r '.results[].name')
         echo "Latest tag: ${new_version}"
         echo "::set-output name=tag::${new_version}"
 
