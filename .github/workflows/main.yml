@@ -31,7 +31,7 @@ jobs:
       id: extract_tag
       run: |
         # Get the latest tag of an image from Docker Hub
-        new_version=$(curl -s "https://registry.hub.docker.com/v2/repositories/$env.REPO/tags/?page_size=1&order=desc" | jq -r '.results[].name')
+        new_version=$(curl -s "https://registry.hub.docker.com/v2/repositories/${env.REPO}/tags/?page_size=1&order=desc" | jq -r '.results[].name')
         echo "Latest tag: ${new_version}"
         echo "::set-output name=tag::${new_version}"
 
