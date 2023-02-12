@@ -1,4 +1,8 @@
 name: Maven Package - Multi stage docker
+#This is a GitHub Actions workflow file for building a Maven Package and a Multi-stage Docker image.
+#The workflow is triggered on a push event.
+#The 'build' job runs on the latest version of Ubuntu and requires permissions to read repository contents and write packages.
+#The job outputs the jar version, which will be used in subsequent steps.
 
 on:
   [push]
@@ -13,27 +17,32 @@ jobs:
       jar_version: ${{ steps.bump.outputs.jar_version }}
 
     steps:
+#Checks out the repository.
     - uses: actions/checkout@v2
 
+#The next step logs in to DockerHub using the Docker/login-action action.
     - name: Login to DockerHub
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
-    
+
+#The 'Extract latest tag' step uses curl to retrieve the latest tag of the 'omeili/java-app' image from Docker Hub.    
     - name: Extract latest tag
       id: extract_tag
       run: |
         # Get the latest tag of an image from Docker Hub
         new_version=$(curl -s "https://registry.hub.docker.com/v2/repositories/omeili/java-app/tags/?page_size=1&order=desc" | jq -r '.results[].name')
         echo "Latest tag: ${new_version}"
-        echo "::set-output name=tag::${new_version}"
+        echo "::set-output name=jar_version::${new_version}"
 
+#The 'Bump jar version' step increments the patch number of the latest tag and sets the new version in the Maven pom file.
+#It then sets the new version as an output.        
     - name: Bump jar version
       id: bump
       run: |
         POMPATH=myapp
-        version=${{ steps.extract_tag.outputs.tag }} 
+        version=${{ steps.extract_tag.outputs.jar_version }} 
         major=$(echo $version | cut -d. -f1)
         minor=$(echo $version | cut -d. -f2)
         patch=$(echo $version | cut -d. -f3)
@@ -41,6 +50,7 @@ jobs:
         mvn -f myapp/pom.xml versions:set -DnewVersion=$new_version
         echo ::set-output name=jar_version::${new_version}        
    
+#The 'Docker build' step builds the Docker image using the 'docker build' command and the new version as the tag.
     - name: Docker build
       run: |
         docker build . -t omeili/java-app:${{ steps.bump.outputs.jar_version }} -f DockerMultiStage
