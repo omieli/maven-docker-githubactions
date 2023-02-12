@@ -54,4 +54,4 @@ jobs:
     steps:
     - name: Run container
       run: |
-        docker run omeili/java-app:${{  steps.bump.outputs.jar_version  }}
+        docker run omeili/java-app:${{  needs.build.outputs.jar_version  }}
