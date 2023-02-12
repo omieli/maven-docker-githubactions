@@ -31,8 +31,8 @@ The Github Actions pipeline defined in this repository performs the following ac
 
 - Fork the repository
 - Add Docker Hub credentials in repository secrets as follow:
-    User name: DOCKERHUB_USERNAME
-    Password: DOCKERHUB_PASSWORD
+    - User name: DOCKERHUB_USERNAME
+    - Password: DOCKERHUB_PASSWORD
 - Go to "Actions" on repository and turn on workflow by clicking the green button as shows in image:
 ![Screenshot](images/workflowimg.png)
 
