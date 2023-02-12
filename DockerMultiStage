@@ -1,11 +1,29 @@
+#Base image used in this multistage Dockerfile is "maven:3" which is a standard Maven image available on Docker Hub
 FROM maven:3 as BUILD_IMAGE
+
+#Setting the environment variable APP_HOME to the location "/root/dev/myapp/" where the application files will be stored
 ENV APP_HOME=/root/dev/myapp/
+
+#Creating a directory structure for the application source code
 RUN mkdir -p $APP_HOME/src/main/java
+
+#Setting the working directory to the location where the application files will be stored
 WORKDIR $APP_HOME
+
+#Copying all the files from the build context to the container
 COPY . .
+
+#Running Maven command to build the application with the specified pom.xml file. The "-B" option runs Maven in batch mode, "-e" option shows the stack trace in case of errors, and "-X" option enables the debugging output
 RUN mvn -B package -e -X --file myapp/pom.xml
 
+#Base image used in this stage is "openjdk:8-jre" which is a standard OpenJDK Java runtime image available on Docker Hub
 FROM openjdk:8-jre
+
+#Setting the working directory to "/root/"
 WORKDIR /root/
+
+#Copying the built application jar from the previous stage using the "--from" option
 COPY --from=BUILD_IMAGE /root/dev/myapp/myapp/target/myapp*.jar .
+
+#Setting the default command to run the application jar
 CMD java -jar myapp*.jar
