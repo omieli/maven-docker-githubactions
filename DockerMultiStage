@@ -8,7 +8,7 @@ WORKDIR root/
 COPY . .
 
 #Running Maven command to build the application with the specified pom.xml file. The "-B" option runs Maven in batch mode, "-e" option shows the stack trace in case of errors, and "-X" option enables the debugging output
-RUN mvn -B package -e -X --file ./myapp/pom.xml
+RUN mvn package --file ./myapp/pom.xml
 
 #Base image used in this stage is "openjdk:8-jre" which is a standard OpenJDK Java runtime image available on Docker Hub
 FROM openjdk:8-jre
