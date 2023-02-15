@@ -1,7 +1,7 @@
 
 #  maven-hello-world
 
-A simple Hello World application using Maven build tool and GitHub actions workflow.
+A Hello World application using Maven build tool and GitHub actions workflow.
 
 #  Introduction
 
