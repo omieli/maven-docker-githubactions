@@ -41,7 +41,7 @@ jobs:
       id: bump
       run: |
         POMPATH=myapp
-        version=${{ steps.extract_tag.outputs.tag }} 
+        version=${projectVersion}
         major=$(echo $version | cut -d. -f1)
         minor=$(echo $version | cut -d. -f2)
         patch=$(echo $version | cut -d. -f3)
