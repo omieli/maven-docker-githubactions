@@ -50,8 +50,13 @@ jobs:
         echo ::set-output name=jar_version::${new_version}        
 
 
-    - name: check pom.xml
-      run: cat myapp/pom.xml
+    - name: Commit and Push Changes
+      run: |
+        git config --global user.name "omieli"
+        git config --global user.email "mieli.ohad@gmail.com"
+        git add pom.xml
+        git commit -m "Update app version in pom.xml"
+        git push
 
       
 #The 'Docker build' step builds the Docker image using the 'docker build' command and the new version as the tag.
