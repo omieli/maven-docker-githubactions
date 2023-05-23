@@ -40,6 +40,7 @@ jobs:
     - name: Bump jar version
       id: bump
       run: |
+        echo "Version: ${projectVersion}"
         POMPATH=myapp
         version=${projectVersion}
         major=$(echo $version | cut -d. -f1)
