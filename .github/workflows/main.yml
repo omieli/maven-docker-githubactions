@@ -53,7 +53,7 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -y xmlstarlet
 
     - name: Run XMLStarlet command
-      run: xmlstarlet ed --inplace -u "/project/version" -v ${new_version} pom.xml
+      run: xmlstarlet ed --inplace -u "/project/version" -v ${new_version} myapp/pom.xml
       
 #The 'Docker build' step builds the Docker image using the 'docker build' command and the new version as the tag.
     - name: Docker build
