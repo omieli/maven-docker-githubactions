@@ -54,7 +54,7 @@ jobs:
       run: |
         git config --global user.name "omieli"
         git config --global user.email "mieli.ohad@gmail.com"
-        git add pom.xml
+        git add myapp/pom.xml
         git commit -m "Update app version in pom.xml"
         git push
 
