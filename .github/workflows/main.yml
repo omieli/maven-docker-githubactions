@@ -50,13 +50,9 @@ jobs:
         echo ::set-output name=jar_version::${new_version}        
 
 
-    - name: Install xmlstarlet
-      run: sudo apt-get update && sudo apt-get install -y xmlstarlet
+    - name: check pom.xml
+      run: cat myapp/pom.xml
 
-    - name: Run XMLStarlet command
-      run: |
-        cd myapp
-        xmlstarlet ed --inplace -u "/project/version" -v ${new_version} myapp/pom.xml
       
 #The 'Docker build' step builds the Docker image using the 'docker build' command and the new version as the tag.
     - name: Docker build
