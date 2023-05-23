@@ -48,7 +48,10 @@ jobs:
         new_version="$major.$minor.$((patch + 1))"
         mvn -f myapp/pom.xml versions:set -DnewVersion=$new_version
         echo ::set-output name=jar_version::${new_version}        
-   
+  
+    - name: Update Maven App Version
+      run: xmlstarlet ed --inplace -u "/project/version" -v "new_version" pom.xml
+
 #The 'Docker build' step builds the Docker image using the 'docker build' command and the new version as the tag.
     - name: Docker build
       run: |
