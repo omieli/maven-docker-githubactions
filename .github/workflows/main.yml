@@ -48,15 +48,15 @@ jobs:
         new_version="$major.$minor.$((patch + 1))"
         mvn -f myapp/pom.xml versions:set -DnewVersion=$new_version
         echo ::set-output name=jar_version::${new_version}        
- 
-    - name: List files
-      run: ls
+
 
     - name: Install xmlstarlet
       run: sudo apt-get update && sudo apt-get install -y xmlstarlet
 
     - name: Run XMLStarlet command
-      run: xmlstarlet ed --inplace -u "/project/version" -v ${new_version} myapp/pom.xml
+      run: |
+        cd myapp
+        xmlstarlet ed --inplace -u "/project/version" -v ${new_version} myapp/pom.xml
       
 #The 'Docker build' step builds the Docker image using the 'docker build' command and the new version as the tag.
     - name: Docker build
