@@ -16,3 +16,9 @@ jobs:
 #Checks out the repository.
     - uses: actions/checkout@v2
 
+    - name: Docker build
+      run: |
+        docker build . -t ${{  env.REPO  }}:1.0.0 -f DockerMultiStage
+    - name: Docker push
+      run: |
+        docker push ${{  env.REPO  }}:1.0.0
