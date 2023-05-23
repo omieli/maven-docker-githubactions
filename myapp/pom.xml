@@ -77,26 +77,32 @@
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.0.0</version>
         </plugin>
-      <plugin>
+
+    <plugin>
       <groupId>org.codehaus.mojo</groupId>
-      <artifactId>build-helper-maven-plugin</artifactId>
-      <version>3.2.0</version>
+      <artifactId>exec-maven-plugin</artifactId>
+      <version>3.0.0</version>
       <executions>
         <execution>
           <id>extract-version</id>
-          <goals>
-            <goal>properties</goal>
-          </goals>
           <phase>initialize</phase>
+          <goals>
+            <goal>exec</goal>
+          </goals>
           <configuration>
-            <property>
-              <name>projectVersion</name>
-              <value>${project.version}</value>
-            </property>
+            <executable>echo</executable>
+            <arguments>
+              <argument>${project.version}</argument>
+            </arguments>
+            <propertyNames>
+              <propertyName>projectVersion</propertyName>
+            </propertyNames>
           </configuration>
         </execution>
       </executions>
     </plugin>
+
+
       </plugins>
     </pluginManagement>
   </build>
