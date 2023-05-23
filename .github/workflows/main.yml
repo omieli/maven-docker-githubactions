@@ -54,7 +54,8 @@ jobs:
       with:
           entrypoint: /bin/bash
           args: -c "apt-get update && apt-get install -y xmlstarlet && xmlstarlet ed --inplace -u \"/project/version\" -v \"new_version\" pom.xml"
-
+          working-directory: ${{ github.workspace }}
+      
 #The 'Docker build' step builds the Docker image using the 'docker build' command and the new version as the tag.
     - name: Docker build
       run: |
